@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgres://test_user:test_password@localhost:5432/test_db
+      JWT_SECRET: ci-test-only-placeholder-not-for-deployment
+    
+    strategy:
+      matrix:
+        node-version: [22.x]
+        
+    services:
+      # Use a simple postgres service for standard CI if needed, 
+      # but our tests are mocked so this is optional or for future integration tests.
+      postgres:
+        image: postgis/postgis:15-3.3
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Run Lint
+      run: |
+        cd backend
+        npm run lint
+
+    - name: Run Tests
+      run: |
+        cd backend
+        npm test
+        
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
