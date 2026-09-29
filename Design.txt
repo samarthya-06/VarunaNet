@@ -1,0 +1,177 @@
+# VARUNANET — Design Brief
+
+**Integrated web application (mobile-friendly)** for crowdsourced ocean hazard reporting + social media analytics. Built with **React (web, PWA)**, **Node.js / Express**, and **PostgreSQL (PostGIS)**. This brief gives visual direction, UX flows, component map, micro-interactions, technical implementation notes, and deliverables so your frontend, backend and infra teams (or you for the semester) can execute with clarity.
+
+---
+
+# THE CONCEPT & VIBE
+
+**Concept:** A trustworthy, approachable platform that fuses grassroots reports with social-media intelligence to surface real-time coastal hazards and support faster, contextual decision-making for citizens and authorities.
+
+**Vibe keywords:**
+“Coastal Authority”, “Empathetic Precision”, “Clear Data”, “Low Bandwidth Ready”, “Mobile First”
+
+**Design goals:**
+
+* Mobile-first, minimal friction reporting (camera + geotag in 2 taps)
+* Clear map-first situational awareness (hotspots, confidence)
+* Explainable analytics (show why posts/reports are flagged)
+* Fast, accessible, and resilient on coastal networks
+
+---
+
+# VISUAL LANGUAGE (Ocean + Clarity)
+
+**Primary palette (calm, authoritative)**
+
+* Background / panels: Offshore Blue #061A2B
+* Surface / cards: Sea Glass #0E3B4B (light card)
+* Primary CTA / highlights: Tide Teal #06B6A4
+* Secondary / warnings: Coral Amber #FF8A65
+* Text: Ivory #F8FAFC
+* Muted text: Mist Gray #9AA7B2
+
+**Accent & status colors**
+
+* Confirmed/Verified: Deep Cyan #008E8C
+* Low confidence / unverified: Pale Coral #FFC9B3
+* Hotspot heat map: gradient from #FFB74D → #FF5252
+
+**Typography**
+
+* Headings: Inter / Poppins (bold, geometric)
+* Body/UI: Inter (regular)
+* Monospace for data blocks: JetBrains Mono
+
+**Imagery**
+
+* Use illustrated coastal silhouettes and subtle water texture. Avoid stock photos for hero to keep load light.
+
+---
+
+# USER JOURNEY & KEY SCREENS (Mobile-first layout)
+
+## 1) HERO / Home (first load)
+
+* Prominent map view (full-viewport on mobile). Top bar: left menu, center search/location, right user/profile.
+* Floating FAB (Tide Teal) bottom-right: **Report Hazard** (camera icon).
+* Quick status strip top: latest verified alert, local confidence %.
+
+## 2) Report Flow (2–4 taps)
+
+* FAB → Quick form modal (camera/attach, select hazard type, short description, auto geotag, optional phone/email).
+* Media: allow picture/video up to small resolution; show compress progress.
+* Offline: if offline, save to IndexedDB + show “Queued — will sync when online”.
+
+UX notes: camera should open in-app (getUserMedia), provide single-tap geotag confirmation, show trust score preview (e.g., “Estimated preliminary score: 35%”).
+
+## 3) Map Dashboard (core)
+
+* Clusters of reports; zoom in to reveal pins. Pins encode: icon (type), color (confidence), small badge for media.
+* Hotspot overlay toggle: heatmap layer (report density) + confidence contours.
+* Side drawer / bottom sheet: filters (date range, hazard type, source, confidence), timeline slider for replay.
+
+## 4) Role Dashboards
+
+* **Citizen:** submit + view local reports, request verification.
+* **Official/Volunteer:** moderation queue (verify/flag), prioritization list (sorted by confidence & proximity), bulk verify tools.
+* **Analyst:** analytics panel (keyword trends, sentiment charts, source breakdown), export CSV.
+
+## 5) Social Feed & NLP Insights
+
+* Feed with aggregated social posts (sampled): small card showing snippet, detected keywords, language, sentiment, classification confidence, why flagged (highlighted terms).
+* “Explainability”: tooltip shows which keywords and which model rule triggered classification.
+
+## 6) Replay / Timeline Mode
+
+* Time slider; play button animates the map, hotspots appear/disappear, graph timeline at bottom (report volume vs. time). Useful for post-event analysis.
+
+---
+
+# MICRO-INTERACTIONS (small details matter)
+
+* Submit animation: FAB morphs into sending card, quick green tick + snackbar “Report queued/sent”.
+* Map hover/tap: subtle pulse animation from pin; open bottom sheet with details.
+* Hotspot confidence meter: radial gauge that animates when values change.
+* Loaders: low-bandwidth “scanline” shimmer on cards (lightweight).
+* Offline indicator: small persistent dot in top bar (red when offline, amber syncing).
+
+---
+
+# MOBILE-SPECIFICS
+
+* PWA setup (service worker) → installable on phones, works offline.
+* Bottom navigation or collapsible left menu on tablets/desktop.
+* Large tappable targets (min 44px).
+* Camera-first reporting: one-tap camera + auto geotag + single-line story description.
+* Low-data mode toggle: disable images, use compressed thumbnails.
+
+---
+
+# TECHNICAL BLUEPRINT (implementation guidance)
+
+## Frontend (React)
+
+* Structure: React + React Router + Context / Redux for auth/state.
+* Map: `react-leaflet` or Mapbox GL / MapLibre (use free tiles or MapTiler).
+* Forms: `react-hook-form`.
+* Service Worker & IndexedDB: `workbox` + `idb` for offline queuing.
+* Realtime: WebSockets (socket.io) for live updates.
+
+## Backend (Node.js / Express)
+
+* Auth: JWT, role claims. Password hashing with bcrypt.
+* File uploads: `multer` → store in S3/GCP or local server for demo. Also generate low-res thumbnails.
+* Background jobs: `Bull` (Redis) for processing uploads, NLP tasks, hotspot recompute.
+* Social media ingestion: scheduled worker jobs with stored API keys; for demo, mock ingestion using sample CSV/JSON.
+
+## Database (PostgreSQL + PostGIS)
+
+* Use PostGIS for geospatial queries (ST_Distance, ST_ClusterDBSCAN for hotspots).
+* Core tables: `users`, `reports`, `media`, `social_posts`, `hotspots`, `analytics_summary`.
+* Index geographies with GIST indices for fast spatial queries.
+
+## Realtime & Hotspot engine
+
+* Hotspot algorithm: time-windowed spatial clustering (DBSCAN or PostGIS ST_ClusterDBSCAN) + weighted scoring from trust factors and NLP relevance.
+* Confidence score example (simple):
+  `score = min(100, base + media_bonus + role_bonus + neighbor_bonus + nlp_bonus - age_penalty)`
+  where base=10, media_bonus=20, role_bonus=30 (volunteer/official), neighbor_bonus=10 per nearby corroborating report, nlp_bonus=0–20, age_penalty reduces with time.
+
+## NLP pipeline (demo-friendly)
+
+* Option A (simple): lightweight Node classifiers + keyword lists + language detection (` franc`), sentiment (`sentiment`), NER with `compromise`.
+* Option B (stronger): Python microservice (Flask/FastAPI) using spaCy + simple model for hazard detection; called asynchronously by job queue.
+* Provide explainability by returning matched keywords, tf-idf highlights, and confidence probability.
+
+## API examples (core)
+
+* `POST /api/reports` — submit report (auth optional for citizens)
+* `GET /api/reports?bbox=...&since=...&types=...` — map feed
+* `POST /api/reports/:id/verify` — official verification
+* `GET /api/hotspots?bbox=...` — hotspot tiles
+* `GET /api/analytics/keywords?since=...` — keyword trends
+
+---
+
+# QUALITY, SECURITY & ACCESSIBILITY
+
+* Use HTTPS everywhere. Sanitize uploads. Rate-limit endpoints.
+* Role-based authorization checks server-side.
+* Accessibility: ARIA labels, keyboard navigation, high-contrast mode, multilingual strings with `i18next`.
+* Tests: unit-tests for API (Jest), integration tests for core flows, end-to-end with Cypress.
+
+---
+
+# DEPLOYMENT & INFRASTRUCTURE (simple for semester)
+
+* Host frontend as static on Netlify / Vercel (or serve from Node).
+* Backend on Heroku / Render / Railway; Postgres add-on with PostGIS.
+* Redis for queues (Bull). S3-compatible bucket for media (or use local storage for demo).
+* CI: GitHub Actions to run tests + lint.
+
+---
+
+---
+
+
