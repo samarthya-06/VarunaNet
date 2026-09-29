@@ -1,0 +1,26 @@
+{
+    "name": "VarunaNet - Coastal Hazard Intelligence",
+    "short_name": "VarunaNet",
+    "description": "Crowdsourced ocean hazard reporting with real-time social media analytics",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#00D9FF",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "utilities",
+        "weather",
+        "news"
+    ],
+    "lang": "en",
+    "scope": "/",
+    "id": "varunanet-app"
+}

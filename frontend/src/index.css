@@ -1,0 +1,552 @@
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* AETHER Palette - Light Mode */
+  --bg-deep: #FFFFFF;
+  --bg-void: #F8FAFC;
+  --bg-panel: rgba(255, 255, 255, 0.8);
+
+  /* Accents */
+  --accent-cyan: #00D9FF;
+  --accent-violet: #8B5CF6;
+  --accent-green: #10B981;
+  --accent-amber: #FFB74D;
+  --accent-red: #EF4444;
+
+  /* Text - Light Mode */
+  --text-primary: #0F172A;
+  --text-muted: #475569;
+  --text-dim: #94A3B8;
+
+  /* Borders & Grid - Light Mode */
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --grid-line: rgba(0, 0, 0, 0.05);
+
+  /* Typography */
+  --font-mono: 'Space Mono', 'IBM Plex Mono', monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Spacing */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 2px;
+
+  /* Effects */
+  --glow-cyan: 0 0 15px rgba(0, 217, 255, 0.3);
+  --glow-violet: 0 0 15px rgba(139, 92, 246, 0.25);
+  --glow-soft: 0 0 30px rgba(0, 217, 255, 0.1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: crosshair;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOM SCROLLBAR - Luminous Cyan
+═══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPOGRAPHY - Technical Readout
+═══════════════════════════════════════════════════════════════ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(2rem, 8vw, 4rem);
+  letter-spacing: -0.05em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: var(--transition);
+  position: relative;
+}
+
+a:hover {
+  text-shadow: var(--glow-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTION - Cyan Highlight
+═══════════════════════════════════════════════════════════════ */
+::selection {
+  background: rgba(0, 217, 255, 0.25);
+  color: var(--accent-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRID OVERLAY - Blueprint Effect
+═══════════════════════════════════════════════════════════════ */
+.grid-overlay {
+  position: relative;
+}
+
+.grid-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--grid-line) 0px,
+      var(--grid-line) 0.5px,
+      transparent 0.5px,
+      transparent 80px),
+    repeating-linear-gradient(0deg,
+      var(--grid-line) 0px,
+      var(--grid-line) 0.5px,
+      transparent 0.5px,
+      transparent 80px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATUS INDICATOR - Animated Pulse
+═══════════════════════════════════════════════════════════════ */
+.status-online {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-cyan);
+}
+
+.status-online::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+  box-shadow: var(--glow-cyan);
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NUMBERED SECTIONS - 01 // Style
+═══════════════════════════════════════════════════════════════ */
+.numbered-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.numbered-section .number {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-violet);
+  white-space: nowrap;
+  padding-top: 0.25rem;
+}
+
+.numbered-section .content h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+
+.numbered-section .content p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTAINERS & UTILITIES
+═══════════════════════════════════════════════════════════════ */
+.container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASSMORPHISM CARDS
+═══════════════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: var(--transition);
+}
+
+.card:hover {
+  border-color: rgba(0, 217, 255, 0.25);
+}
+
+.card-minimal {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.card-minimal:hover {
+  border-color: var(--accent-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS - Terminal Style
+═══════════════════════════════════════════════════════════════ */
+.btn {
+  background: transparent;
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+  padding: 0.875rem 1.75rem;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn:hover {
+  background: rgba(0, 217, 255, 0.1);
+  box-shadow: var(--glow-cyan);
+  text-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--accent-cyan);
+  color: var(--bg-deep);
+  border-color: var(--accent-cyan);
+}
+
+.btn-primary:hover {
+  background: #33E1FF;
+  color: var(--bg-deep);
+}
+
+.btn-secondary {
+  border-color: var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-violet);
+  color: var(--accent-violet);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TEXT UTILITIES
+═══════════════════════════════════════════════════════════════ */
+.text-muted {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.text-cyan {
+  color: var(--accent-cyan);
+}
+
+.text-violet {
+  color: var(--accent-violet);
+}
+
+.text-glow {
+  text-shadow: var(--glow-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FORM INPUTS - Terminal Style
+═══════════════════════════════════════════════════════════════ */
+input,
+select,
+textarea {
+  background: rgba(5, 5, 16, 0.6);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  transition: var(--transition);
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 1px var(--accent-cyan), var(--glow-soft);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-dim);
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300D9FF' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+select option {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SYSTEM METRICS - AETHER Style
+═══════════════════════════════════════════════════════════════ */
+.metrics-panel {
+  border: 1px solid var(--border-subtle);
+  padding: 1rem 1.5rem;
+}
+
+.metrics-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.metrics-row:last-child {
+  border-bottom: none;
+}
+
+.metrics-row .label {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.metrics-row .value {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--accent-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COORDINATES DISPLAY
+═══════════════════════════════════════════════════════════════ */
+.coords-display {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  text-align: right;
+}
+
+.coords-display .label {
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════════════ */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.scanline::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--accent-cyan), transparent);
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanline 8s linear infinite;
+}
+
+@keyframes pulse-cyan {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px rgba(0, 217, 255, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 217, 255, 0);
+  }
+}
+
+.pulse-animation {
+  animation: pulse-cyan 2s infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAP DARK MODE
+═══════════════════════════════════════════════════════════════ */
+.leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) saturate(150%);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT HELPERS
+═══════════════════════════════════════════════════════════════ */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

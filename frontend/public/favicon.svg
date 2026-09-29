@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="wave" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D9FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#050505" stroke="url(#wave)" stroke-width="2"/>
+  <path d="M20 55 Q35 45, 50 55 T80 55" stroke="#00D9FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M15 65 Q32 55, 50 65 T85 65" stroke="#00D9FF" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M25 75 Q40 68, 55 75 T85 73" stroke="#00D9FF" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="50" cy="35" r="8" fill="#00D9FF"/>
+  <circle cx="50" cy="35" r="4" fill="#050505"/>
+</svg>
